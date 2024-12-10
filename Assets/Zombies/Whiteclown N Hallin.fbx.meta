@@ -8,17 +8,17 @@ ModelImporter:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: whiteclown_diffuse
-    second: {fileID: 2800000, guid: f6d0395bba0088045b5502fb210f53d7, type: 3}
+    second: {fileID: 2800000, guid: da587bb49130b4d459577fcb0255c24f, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: whiteclown_normal
-    second: {fileID: 2800000, guid: 4ea86e35104cd1d468edb647a60742e5, type: 3}
+    second: {fileID: 2800000, guid: 804a2651cf223fe4d8cc2a6b519cf9ad, type: 3}
   - first:
       type: UnityEngine:Texture2D
       assembly: UnityEngine.CoreModule
       name: whiteclown_specular
-    second: {fileID: 2800000, guid: 63f360b9b01c7be4aad889184bae3294, type: 3}
+    second: {fileID: 2800000, guid: 8f55884c644f0f941a7bb0adf0df7226, type: 3}
   materials:
     materialImportMode: 2
     materialName: 0

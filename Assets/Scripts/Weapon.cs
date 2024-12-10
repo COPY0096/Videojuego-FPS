@@ -10,12 +10,12 @@ public enum WeaponModel
     M4
 }
 
+
 public class Weapon : MonoBehaviour
 {
 
-    public bool isActiveWeapon;
-
     public bool isShooting, readyToShoot;
+    public int weaponDamage;
     bool allowReset = true;
     public float shootingDelay = 2f;
 
@@ -36,11 +36,13 @@ public class Weapon : MonoBehaviour
     public int magazineSize, bulletsLeft;
     public bool isReloading;
 
+    public TextMeshProUGUI ammoDisplay;
+
     public Vector3 spawnPosition;
     public Vector3 spawnRotation;
 
-    // Ahora puedes usar la enumeración globalmente.
     public WeaponModel thisWeaponModel;
+ 
 
     public enum ShootingMode
     {
@@ -61,55 +63,54 @@ public class Weapon : MonoBehaviour
     }
 
     void Update()
-{
-    if (isActiveWeapon) // Verificar si esta es el arma activa
+{   
+    if(bulletsLeft == 0 && isShooting)
     {
-        if (bulletsLeft == 0 && isShooting)
-        {
-            SoundManager.Instance.emptyMagazineSoundM1911.Play();
-        }
-
-        if (currentShootingMode == ShootingMode.Auto)
-        {
-            isShooting = Input.GetKey(KeyCode.Mouse0);
-        }
-        else if (currentShootingMode == ShootingMode.Single || currentShootingMode == ShootingMode.Burst)
-        {
-            isShooting = Input.GetKeyDown(KeyCode.Mouse0);
-        }
-
-        if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
-        {
-            Reload();
-        }
-
-        if (readyToShoot && isShooting == false && isReloading == false && bulletsLeft <= 0)
-        {
-            //Reload();
-        }
-
-        if (readyToShoot && isShooting && bulletsLeft > 0)
-        {
-            burstBulletsLeft = bulletsPerBurst;
-            FireWeapon();
-        }
-
-        if (AmmoManager.Instance != null && AmmoManager.Instance.ammoDisplay != null)
-        {
-            AmmoManager.Instance.ammoDisplay.text = $"{bulletsLeft}/{magazineSize}";
-        }
+        SoundManager.Instance.emptyMagazineSoundM1911.Play();
     }
+
+    if (currentShootingMode == ShootingMode.Auto)
+    {
+        isShooting = Input.GetKey(KeyCode.Mouse0);
+    }
+    else if (currentShootingMode == ShootingMode.Single ||
+    currentShootingMode == ShootingMode.Burst)
+    {
+        isShooting = Input.GetKeyDown(KeyCode.Mouse0);
+    }
+
+    if (Input.GetKeyDown(KeyCode.R) && bulletsLeft < magazineSize && isReloading == false)
+    {
+        Reload();
+    }
+
+    if (readyToShoot && isShooting == false && isReloading == false && bulletsLeft <= 0)
+    {
+        //Reload();
+    }
+
+
+
+    if (readyToShoot && isShooting && bulletsLeft > 0)
+    {
+        burstBulletsLeft = bulletsPerBurst;
+        FireWeapon();
+    }
+
+    
+    
 }
 
 
     private void FireWeapon()
-    {
+    {   
         bulletsLeft--;
-
+        
         muzzleEffect.GetComponent<ParticleSystem>().Play();
         animator.SetTrigger("RECOIL");
-
+        
         SoundManager.Instance.PlayShootingSound(thisWeaponModel);
+
 
         readyToShoot = false;
 
@@ -117,28 +118,33 @@ public class Weapon : MonoBehaviour
 
         GameObject bullet = Instantiate(bulletPrefab, bulletSpawn.position, Quaternion.identity);
 
+        Bullet bul = bullet.GetComponent<Bullet>();
+        bul.bulletDamage = weaponDamage;
+
         bullet.transform.forward = shootingDirection;
 
         bullet.GetComponent<Rigidbody>().AddForce(shootingDirection * bulletVelocity, ForceMode.Impulse);
 
         StartCoroutine(DestroyBulletAfterTime(bullet, bulletPrefabLifeTime));
 
-        if (allowReset)
+        if(allowReset)
         {
             Invoke("ResetShot", shootingDelay);
             allowReset = false;
-        }
+        } 
 
-        if (currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
+        if(currentShootingMode == ShootingMode.Burst && burstBulletsLeft > 1)
         {
-            burstBulletsLeft--;
+           burstBulletsLeft--;
             Invoke("FireWeapon", shootingDelay);
         }
+        
     }
 
     private void Reload()
     {
-        SoundManager.Instance.PlayReloadSound(thisWeaponModel);
+
+       SoundManager.Instance.PlayReloadSound(thisWeaponModel);
 
         animator.SetTrigger("RELOAD");
         isReloading = true;

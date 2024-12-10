@@ -5274,6 +5274,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isShooting: 0
   readyToShoot: 0
+  weaponDamage: 25
   shootingDelay: 0.15
   bulletsPerBurst: 1
   burstBulletsLeft: 0
@@ -5288,6 +5289,9 @@ MonoBehaviour:
   magazineSize: 30
   bulletsLeft: 0
   isReloading: 0
+  ammoDisplay: {fileID: 0}
+  spawnPosition: {x: 0, y: 0, z: 0}
+  spawnRotation: {x: 0, y: 0, z: 0}
   thisWeaponModel: 1
   currentShootingMode: 2
 --- !u!95 &4771554933614254390
